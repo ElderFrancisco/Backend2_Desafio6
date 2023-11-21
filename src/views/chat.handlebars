@@ -1,0 +1,62 @@
+<div>
+    <form id="messagesForm">
+  <input type="email" id="userInput" name="user" placeholder="Usuario" required>
+  <input type="text" id="messageInput" name="message" placeholder="message" required>
+  <button type="submit" id="button">enviar mensaje</button>
+</form>
+<h1>Mensajes:</h1>
+<ul id="lista-mensajes" style="">
+    
+</ul>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+ 
+        socket.on('Chat', (messages) => {
+        const listaMensajes = document.getElementById('lista-mensajes');
+        
+        listaMensajes.innerHTML = '';
+        
+            messages.forEach(messages => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.style.display = 'flex';
+            card.style.flexDirection = 'column';
+            card.style.margin = 10;
+            card.style.border = '1px solid #000'
+
+            const user = document.createElement('h5');
+            user.textContent = messages.user;
+
+            const message = document.createElement('p');
+            message.textContent = messages.message;
+            // Agrega elementos a la tarjeta
+            card.appendChild(user);
+            card.appendChild(message);
+    
+            // Agrega la tarjeta a la lista de productos
+            listaMensajes.appendChild(card);
+        });
+        });
+
+        document.getElementById("messagesForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevenir el envío del formulario
+
+      // Obtener los valores de los campos del formulario
+      const user = document.getElementById("userInput").value;
+      const message = document.getElementById("messageInput").value;
+      
+      const messageSent = {
+        user: user,
+        message: message,
+      };
+      
+        socket.emit('newChat',messageSent);
+
+          userInput.value = "";
+          messageInput.value = "";
+
+    });
+    </script>
+</div>
