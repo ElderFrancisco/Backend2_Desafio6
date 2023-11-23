@@ -1,9 +1,5 @@
 const { Router } = require('express');
-const userModel = require('../../../dao/models/users.model');
-const HashManager = require('../../../util/hash');
 const passport = require('passport');
-
-const HashController = new HashManager();
 
 module.exports = (app) => {
   let router = new Router();
@@ -29,56 +25,26 @@ module.exports = (app) => {
       return res.redirect('/products');
     },
   ),
-    // router.post('/login', async (req, res) => {
-    //   try {
-    //     const { email, password } = req.body;
-    //     if (email == 'adminCoder@coder.com' && password == 'adminCod3r123') {
-    //       const userAdmin = {
-    //         first_name: 'Admin',
-    //         last_name: 'admin',
-    //         email: 'adminCoder@coder.com',
-    //         age: 0,
-    //         password: 'adminCod3r123',
-    //         rol: 'admin',
-    //       };
-    //       req.session.user = userAdmin;
-    //       return res.redirect('/products');
-    //     }
-    //     const user = await userModel.findOne({ email });
-
-    //     if (!user) return res.redirect('/authfailed');
-    //     if (HashController.isValidPassword(user, password) == false)
-    //       return res.redirect('/authfailed');
-    //     req.session.user = user;
-    //     return res.redirect('/products');
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // });
-
     router.post(
-      '/singup',
+      '/register',
       passport.authenticate('register', { failureRedirect: '/authfailed' }),
       async (req, res) => {
         return res.redirect('/login');
       },
     ),
-    /*async (req, res) => {
-    try {
-      const user = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        age: req.body.age,
-        password: HashController.createHash(req.body.password),
-      };
-      await userModel.create(user);
-      return res.redirect('/login');
-    } catch (error) {
-      console.log(error);
-    }
-  );*/
-
+    router.get(
+      '/login-github',
+      passport.authenticate('github', { scope: ['user:email'] }),
+      async (req, res) => {},
+    ),
+    router.get(
+      '/githubcallback',
+      passport.authenticate('github', { failureRedirect: '/authfailed' }),
+      async (req, res) => {
+        req.session.user = req.user;
+        res.redirect('/products');
+      },
+    ),
     router.get('/logout', async (req, res) => {
       try {
         if (req.session?.user) {
@@ -87,7 +53,7 @@ module.exports = (app) => {
           });
           return res.redirect('/login');
         }
-        return res.render('authfailed', {});
+        return res.redirect('/authfailed');
       } catch (error) {
         console.log(error);
       }

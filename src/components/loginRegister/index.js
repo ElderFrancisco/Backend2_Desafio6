@@ -14,12 +14,12 @@ module.exports = (app) => {
     }
   });
 
-  router.get('/singup', async (req, res) => {
+  router.get('/register', async (req, res) => {
     try {
       if (req.session?.user) {
         return res.redirect('/products');
       }
-      return res.render('singup', {});
+      return res.render('register', {});
     } catch (error) {
       console.log(error);
     }

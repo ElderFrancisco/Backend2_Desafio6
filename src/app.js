@@ -33,7 +33,7 @@ class Server {
     this.app.engine('handlebars', exphbs.engine());
     this.app.set('view engine', 'handlebars');
     this.app.set('views', __dirname + '/views');
-    this.app.use(express.static(__dirname + 'public'));
+    this.app.use(express.static(`${__dirname}/public`));
     this.app.use(
       session({
         store: MongoStore.create({
