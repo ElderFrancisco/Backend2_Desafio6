@@ -54,17 +54,17 @@ class ProductManagerDb {
         sort: parsedSort,
         lean: true,
       });
-      const urlPrev = `http://localhost:8080${pathUrl}?limit=${
-        productsListLimit.limit
-      }&page=${productsListLimit.page - 1}&query=${
-        query != null ? query : null
-      }&sort=${sort != null ? sort : null}`;
+      const urlPrev = `${pathUrl}?limit=${productsListLimit.limit}&page=${
+        productsListLimit.page - 1
+      }&query=${query != null ? query : null}&sort=${
+        sort != null ? sort : null
+      }`;
 
-      const urlNext = `http://localhost:8080${pathUrl}?limit=${
-        productsListLimit.limit
-      }&page=${productsListLimit.page + 1}&query=${
-        query != null ? query : null
-      }&sort=${sort != null ? sort : null}`;
+      const urlNext = `${pathUrl}?limit=${productsListLimit.limit}&page=${
+        productsListLimit.page + 1
+      }&query=${query != null ? query : null}&sort=${
+        sort != null ? sort : null
+      }`;
       const result = {
         status: 'success',
         payload: productsListLimit.docs,

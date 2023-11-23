@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const passport = require('passport');
+const initializePassport = require('./config/passport.config');
 
 class Server {
   constructor() {
@@ -20,6 +22,7 @@ class Server {
     this.server = http.createServer(this.app);
     this.utilSocket();
     this.connect();
+    this.runPassport();
   }
 
   settings() {
@@ -54,6 +57,10 @@ class Server {
       .catch((e) => {
         console.log('error' + e);
       });
+  }
+  runPassport() {
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
   routes() {
